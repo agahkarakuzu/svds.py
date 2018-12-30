@@ -1,0 +1,43 @@
+{
+  "Bivariate::Pearson": {
+    "Required": [
+      "xData",
+      "yData",
+      "xLabel",
+      "yLabel",
+      "rPearson",
+      "fitLine"
+    ],
+    "Optional": [
+      "CI",
+      "CILevel",
+      "pVal",
+      "h",
+      "slope",
+      "intercept",
+      "CILine1",
+      "CILine2"
+    ]
+  },
+"Bivariate::Spearman":{
+  "Required":[
+    "xData",
+    "yData",
+    "xLabel",
+    "yLabel",
+    "rSpearman",
+    "fitLine"
+  ],
+  "Optional":[
+    "CI",
+    "CILevel",
+    "pVal",
+    "h",
+    "slope",
+    "intercept",
+    "CILine1",
+    "CILine2"
+  ]
+}
+
+}
