@@ -2,31 +2,41 @@
 Class for validating SVDS files.
 Convention is adapted from bids-standard/pybids
 """
-from os.path import join, abspath, dirname
+from os.path import join, abspath, dirname, splitext
 import json
 import logging
-
 
 class SVDSValidator:
 
     def __init__(self):
       self.rule_dir = join(dirname(abspath(__file__)),'rules')
+      #logging.basicConfig(level=logging.INFO)
       self.logger = logging.getLogger(__name__)
+
 
     def load_content(self,content):
         self.content = content
 
+    def is_svds(self):
+
+        conditions = []
+        conditions.append(self._is_uniform_main_keys())
+        conditions.append(self._is_a_valid_class())
+        conditions.append(self._is_the_class_valid())
+
+        return all(conditions)
+
     def _is_uniform_main_keys(self):
         """ Check if all the lists respect main format."""
-        cond1 = (set({*name.keys()}) == set(['Tag','Required','Optional']) for name in self.content)
-        cond2 = (set({*name.keys()}) == set(['Tag','Required']) for name in self.content)
+        cond1 = (set(list(name.keys())) == set(['Tag','Required','Optional']) for name in self.content)
+        cond2 = (set(list(name.keys())) == set(['Tag','Required']) for name in self.content)
 
         if all(cond2):
             self.optional_stored = False
-            self.logger.info('Loaded json content contains key: Optional')
+            self.logger.warning('Loaded json content does not contain key: Optional')
         elif all(cond1):
             self.optional_stored = True
-            self.logger.warning('Loaded json content does not contain key: Optional')
+            self.logger.info('Loaded json content contains key: Optional')
 
         if not any([all(cond1),all(cond2)]):
             self.logger.error('Loaded json content does not attain base svds structure.')
@@ -35,17 +45,18 @@ class SVDSValidator:
 
     def _is_a_valid_class(self):
 
-        with open(join(self.rule_dir, 'fixed_class_names.json'), 'r') as f:
+        with open(join(self.rule_dir, 'fixed_class_names.json')) as f:
             fixed_class_names_json = json.load(f)
             fixed_class_names = fixed_class_names_json['fixed_class_names']
 
         # All Tag.Class MUST be identical in a given json that respects svds.
         try:
-            cond1 = all(elem == self.content[0]['Tag']['Class'] for elem in self.content)
+            cond1 = all(elem['Tag']['Class'] == self.content[0]['Tag']['Class'] for elem in self.content)
             self.logger.info('Tag.Class is consistent: %s' % self.content[0]['Tag']['Class'])
         except:
             cond1 = False
             self.logger.error('Tag.Class MUST be consistent for all entries of the loaded json content.')
+
         # Tag.Class must be a member of fixed_class_names
         if cond1:
             cond2 = self.content[0]['Tag']['Class'] in fixed_class_names
@@ -61,32 +72,29 @@ class SVDSValidator:
 
     def _is_the_class_valid(self):
         # Check compliance of the Required and Optional fields
-        if self._is_a_valid_class():
+        self.logger.disabled = True
+        answer = self._is_a_valid_class()
+        self.logger.disabled = False
+
+        if answer:
             with open(join(self.rule_dir, 'svds_class_rules.json'), 'r') as f:
                 svds_class_rules_json = json.load(f)
                 this_class_rules = svds_class_rules_json[self.content[0]['Tag']['Class']]
 
+            self.logger.disabled = False
             # All required fields MUST be present
 
-            cond1 = all(set({*elem['Required'].keys()}) == set(this_class_rules['Required']) for elem in self.content)
+            cond1 = all(set(list(elem['Required'].keys())) == set(this_class_rules['Required']) for elem in self.content)
 
             if self.optional_stored:
             # Optional entries can be a subset of those descrived by SVDS.
-                cond2 = all(set({*elem['Required'].keys()}) == set(this_class_rules['Required']) for elem in self.content)
+                cond2 = any(set(list(elem['Required'].keys())) <= set(this_class_rules['Required']) for elem in self.content)
             else:
                 cond2 = True
 
             condition = all([cond1,cond2])
-
         else:
             condition = False
             self.logger.error('Cannot validate a Tag.Class, which is not described by SVDS.')
 
         return condition
-
-
-
-
-from validation import SVDSValidator
-aa = SVDSValidator()
-aa.rule_dir

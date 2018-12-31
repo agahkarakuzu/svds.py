@@ -1,0 +1,10 @@
+{
+    "fixed_file_names" : [
+        "Spearman.json",
+        "Pearson.json",
+        "Concordance.json",
+        "Bend.json",
+        "Skipped.json",
+        "BivarDescriptive.json"
+    ]
+}
