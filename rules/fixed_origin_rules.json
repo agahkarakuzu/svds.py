@@ -1,0 +1,10 @@
+{
+    "fixed_origin_rules" : [
+        "operationSystem",
+        "softwareName",
+        "softwareVersion",
+        "platform",
+        "platformVersion",
+        "date"
+    ]
+}

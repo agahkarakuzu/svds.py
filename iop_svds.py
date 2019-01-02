@@ -10,7 +10,10 @@ def content_to_tuple(content):
 
 
 def load_svds(input):
-
+    """
+    To load an to validate SVDS files in a given directory.
+    Author: Agah Karakuzu 2018
+    """
     @contextmanager
     def open_json(filename):
         if splitext(filename)[1] != '.json':
@@ -35,14 +38,14 @@ def load_svds(input):
             cur_validator = SVDSValidator()
             # Recursive call
             cur_validator.load_content(load_svds(join(input,file)))
-
-            if cur_validator.is_svds:
-                print('%s is SVDS' % file)
+            # Validation
+            result = cur_validator.is_svds()
+            # Collect
+            if result:
+                print('%s is a valid SVDS file.' % file)
                 contents.append(cur_validator.content)
             else:
-                print('You will get warning from validator anyways.')
-
-
+                print('%s is NOT a valid SVDS file.' % file)
 
     elif isfile(input):         # If provided a single file
 

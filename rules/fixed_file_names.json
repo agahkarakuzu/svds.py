@@ -5,6 +5,7 @@
         "Concordance.json",
         "Bend.json",
         "Skipped.json",
-        "BivarDescriptive.json"
+        "BivarDescriptive.json",
+        "Origin.json"
     ]
 }
