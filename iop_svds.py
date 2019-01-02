@@ -4,6 +4,11 @@ from collections import Mapping
 from os.path import join, abspath, dirname, isfile, isdir, splitext
 from os import listdir
 import json
+import logging
+
+logging.basicConfig()
+
+LGR = logging.getLogger(__name__)
 
 def load_svds(input):
     """
@@ -35,15 +40,14 @@ def load_svds(input):
             # Recursive call
             cur_validator.load_content(load_svds(join(input,file)))
             # Validation
-            print(file)
             result = cur_validator.is_svds()
             # Collect
             if result:
-                print('%s is a valid SVDS file.' % file)
+                LGR.info('%s is a valid SVDS file.' % file)
                 contents.append(cur_validator.content)
 
             else:
-                print('%s is NOT a valid SVDS file.' % file)
+                LGR.error('%s is NOT a valid SVDS file.' % file)
 
         fmly_names, cls_names = get_validated_classnames(contents)
 
