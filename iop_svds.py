@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 from validation import SVDSValidator
-from collections import namedtuple
+from collections import Mapping
 from os.path import join, abspath, dirname, isfile, isdir, splitext
 from os import listdir
 import json
@@ -35,6 +35,7 @@ def load_svds(input):
             # Recursive call
             cur_validator.load_content(load_svds(join(input,file)))
             # Validation
+            print(file)
             result = cur_validator.is_svds()
             # Collect
             if result:
@@ -48,7 +49,7 @@ def load_svds(input):
 
         dicto = {}
         for ii in range(len(contents)):
-            dicto.update({fmly_names[ii]:parse_contents(contents[ii],cls_names[ii])})
+            dicto = update(dicto, {fmly_names[ii]:parse_contents(contents[ii],cls_names[ii])})
 
         dicto.update({'Contains':{'Family':fmly_names,'Class':cls_names}})
 
@@ -130,3 +131,11 @@ class AttrDict(dict):
         else:
             return AttrDict({key: AttrDict.from_nested_dict(data[key])
                                 for key in data})
+
+def update(d, u):
+    for k, v in u.items():
+        if isinstance(v, Mapping):
+            d[k] = update(d.get(k, {}), v)
+        else:
+            d[k] = v
+    return d

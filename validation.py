@@ -32,8 +32,9 @@ class SVDSValidator:
 
         # Validation of Origin.json and Description.json should be handled separately
 
-        if self.singleton and (list(self.content.keys())[0] == 'Origin'):
+        if self.singleton and self.content['Origin']:
             conditions  = self._is_origin_valid()
+
             return conditions
 
         else:
