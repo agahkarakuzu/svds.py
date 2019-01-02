@@ -3,6 +3,7 @@
         "Correlation::Pearson",
         "Correlation::Spearman",
         "Correlation::Bend",
+        "Correlation::Concordance",
         "Correlation::Skipped",
         "Correlation::Descriptive"
     ]
