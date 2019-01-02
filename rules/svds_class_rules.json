@@ -1,5 +1,5 @@
 {
-  "Bivariate::Pearson": {
+  "Correlation::Pearson": {
     "Required": [
       "xData",
       "yData",
@@ -19,7 +19,7 @@
       "CILine2"
     ]
   },
-"Bivariate::Spearman":{
+"Correlation::Spearman":{
   "Required":[
     "xData",
     "yData",
@@ -38,6 +38,29 @@
     "CILine1",
     "CILine2"
   ]
+},
+"Correlation::Concordance":{
+  "Required":[
+    "xData",
+    "yData",
+    "xLabel",
+    "yLabel",
+    "rhoConcordance",
+    "shiftedLine",
+    "identityLine",
+  ],
+  "Optional":[
+    "CI",
+    "CILevel",
+    "pVal",
+    "h",
+    "shift",
+    "scale",
+    "biasFactor",
+    "CILine1",
+    "CILine2"
+  ]
 }
+
 
 }

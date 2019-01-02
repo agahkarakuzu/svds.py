@@ -1,9 +1,9 @@
 {
     "fixed_class_names" : [
-        "Bivariate::Pearson",
-        "Bivariate::Spearman",
-        "Bivariate::Bend",
-        "Bivariate::Skipped",
-        "Bivariate::Descriptive"
+        "Correlation::Pearson",
+        "Correlation::Spearman",
+        "Correlation::Bend",
+        "Correlation::Skipped",
+        "Correlation::Descriptive"
     ]
 }
